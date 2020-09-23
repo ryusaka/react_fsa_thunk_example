@@ -1,22 +1,41 @@
 const path = require('path')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
+const nodeExternals = require('webpack-node-externals')
 
 const webpackConfig = {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
-  cache: true,
   stats: 'errors-only',
   context: __dirname, // to automatically find tsconfig.json
-  entry: './src/index.tsx',
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 300,
+    ignored: [/node_modules/, /dist\//, /app-dist\//],
+  },
+  cache: true,
+  target: 'node',
+  entry: {
+    bundle: [
+      path.join(__dirname, '/main-node.ts'),
+    ],
+  },
+  externals: [
+    nodeExternals({
+      target: 'node',
+      modulesDir: path.resolve('../node_modules'),
+      whitelist: [/\.(?!(?:jsx?|tsx?|json)$).{1,5}$/i],
+    }),
+  ],
   resolve: {
     modules: ['src', 'node_modules'],
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },
   output: {
-    path: path.resolve('./dist'),
+    path: path.resolve('./app-dist'),
     filename: '[name].js',
     chunkFilename: '[name].js',
+    libraryTarget: 'commonjs2',
     publicPath: '/',
   },
   module: {

@@ -3,9 +3,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
 
 const webpackConfig = {
-  mode: 'development',
-  devtool: 'cheap-module-eval-source-map',
-  cache: true,
+  mode: 'production',
   stats: 'errors-only',
   context: __dirname, // to automatically find tsconfig.json
   entry: './src/index.tsx',
@@ -14,7 +12,7 @@ const webpackConfig = {
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },
   output: {
-    path: path.resolve('./dist'),
+    path: path.resolve('app/dist'),
     filename: '[name].js',
     chunkFilename: '[name].js',
     publicPath: '/',
@@ -58,7 +56,7 @@ const webpackConfig = {
             },
           },
         ],
-      }
+      },
     ],
   },
   plugins: [
